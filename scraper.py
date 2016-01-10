@@ -4,6 +4,7 @@
 import dateutil.parser
 import lxml.html
 import scraperwiki
+import pytz
 
 # Read in a page
 html = scraperwiki.scrape("http://heather.cs.ucdavis.edu/~matloff/256/Blog.html")
@@ -21,7 +22,7 @@ for item in root.cssselect("h2"):
       'title': item.text,
       'content': "".join(content),
       'link': "http://heather.cs.ucdavis.edu/~matloff/256/Blog.html",
-      'date': dateutil.parser.parse(item.text)
+      'date': pytz.UTC.localize(dateutil.parser.parse(item.text)).isoformat()
     }
     # Write out to the sqlite database using scraperwiki library
     scraperwiki.sqlite.save(unique_keys=['title'], data=data)
